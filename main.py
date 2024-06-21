@@ -40,13 +40,44 @@ from tqdm import tqdm
 wd_Chrome.get("https://www.flashscore.com/") 
 time.sleep(2)
 
+next_day = wd_Chrome.find_elements(By.CSS_SELECTOR,'button.calendar__navigation--yesterday')
+for button in next_day:
+    wd_Chrome.execute_script("arguments[0].click();", button)
+time.sleep(2)
+
+# Procurar botão scheduled
+finished = wd_Chrome.find_elements(By.CSS_SELECTOR, 'div.filters__text--default')[1]
+wd_Chrome.execute_script("arguments[0].click();", finished)
+
+dados = {
+    "HOME":[],
+    "AWAY":[],
+    "FTHG":[],
+    "FTAG":[]
+}
+
+count = 0
 eventos = wd_Chrome.find_elements(By.CSS_SELECTOR, 'div.event__match--twoLine')
 for evento in eventos:
-    home = evento.find_element(By.CSS_SELECTOR, 'div.event__homeParticipant').text
-    away = evento.find_element(By.CSS_SELECTOR, 'div.event__awayParticipant').text
-    golsHome = evento.find_element(By.CSS_SELECTOR, 'div.event__score--home').text
-    golsAway = evento.find_element(By.CSS_SELECTOR, 'div.event__score--away').text
-    print(f'Evento: {home} {golsHome} x {golsAway} {away}')
+    try:
+        count +=1
+        home = evento.find_element(By.CSS_SELECTOR, 'div.event__homeParticipant').text
+        away = evento.find_element(By.CSS_SELECTOR, 'div.event__awayParticipant').text
+        fthg = evento.find_element(By.CSS_SELECTOR, 'div.event__score--home').text
+        ftag = evento.find_element(By.CSS_SELECTOR, 'div.event__score--away').text
+        # print(f'Evento: {home} {golsHome} x {golsAway} {away}')
+        dados["HOME"].append(home)
+        dados["AWAY"].append(away)
+        dados["FTHG"].append(fthg)
+        dados["FTAG"].append(ftag)
+    except Exception as error:
+        # print(f'Evento: {home} x {away}\nErro: {error}')
+        pass
+print(f'{count} jogos.')
+
+df = pd.DataFrame(dados)
+filename = "datasetflashscore.csv"
+df.to_csv(filename, sep=";", index=False)
 
 # Completar:
 # Acessar páginas diferentes (ao vivo, encerrados, próximos, odds) com .click() ou execute_script()
