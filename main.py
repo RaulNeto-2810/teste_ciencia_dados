@@ -34,6 +34,9 @@ import pandas as pd
 import time
 from tqdm import tqdm
 
+# Tempo inicial
+start = time.time()
+
 """# Iniciando a Raspagem de Dados"""
 
 # Com o WebDrive a gente consegue a pedir a página (URL)
@@ -78,10 +81,7 @@ print(f'{count} jogos.')
 df = pd.DataFrame(dados)
 filename = "datasetflashscore.csv"
 df.to_csv(filename, sep=";", index=False)
-
-# Completar:
-# Acessar páginas diferentes (ao vivo, encerrados, próximos, odds) com .click() ou execute_script()
-# Pegar o placar do jogo
-# Pegar o tempo de jogo
-# Acessar a página específica de um jogo e pegar stats
-# Acessar a página específica de um time e pegar placares passados
+# Tempo final
+end = time.time()
+# Tempo decorrido (final - inicial)
+print(f'Tempo de execução: {end-start} segundos')
