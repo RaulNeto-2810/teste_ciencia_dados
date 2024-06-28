@@ -71,7 +71,7 @@ async function scrapeData(page){
             console.log('Erro ao capturar dados do evento');
         }
     }
-    console.log(dados);
+    // console.log(dados);
     // console.log(eventos);
     saveToCSV(dados);
     const end = Date.now();
